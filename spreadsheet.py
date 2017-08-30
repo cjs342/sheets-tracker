@@ -7,6 +7,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 import private
 import gspread #make sure this is BELOW oauth2client import. NO IDEA why this is needed for Heroku to work
 import time
+from pytz import timezone
+from datetime import datetime
 
 def writeToSpreadsheet(cat_key, cat_name, amount):#(row,col,x):
     # use creds to create a client to interact with the Google Drive API
@@ -32,6 +34,20 @@ def writeToSpreadsheet(cat_key, cat_name, amount):#(row,col,x):
         row+=1
 
     #columns = private.getColumns()
+    tz = timezone("US/Eastern")
+    d=datetime.now(tz)
+    hour = d.hour
+    if d.minute < 10:
+        minute = "0%d" % d.minute
+    else:
+        minute = d.minute
+
+    if d.second < 10:
+        second = "0%d" % d.second
+    else:
+        second = d.second
+
+    time_now = "{}:{}:{}".format(hour,minute,second)
     time_now = time.strftime("%H:%M:%S")
     date = time.strftime("%m/%d/%Y")
 
